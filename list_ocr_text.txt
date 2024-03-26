@@ -1,0 +1,9 @@
+carro1.jpg	{'text': ''}
+carro3.jpg	{'text': ''}
+carro4.jpg	{'text': ''}
+carro5.jpg	{'text': ''}
+placa-trabalhada.png	{'text': ''}
+placa1.jpg	{'text': ''}
+placa2.jpg	{'text': 'BRA2E19\n'}
+Placa_Carro.jpg	{'text': 'ABC1234\n\n'}
+Screenshot_1.png	{'text': 'Installation\n\n1MakesureyourcomputerhasthecommercialengineinstalledThiscanbeachieved\nbyinstallingeithertheOpenALPRAgentortheCommercialSDKThisensuresthat\ntheCcodeboundtothisPythonpackageisavailableonyoursystem\n\n2IMPORTANTyoucannotusethispackagewithoutaproductlicenseIfyouneedan\nevaluationlicensepleaserequestonehere\n\n3InstallthisPythonbindingpipinstallopenalpr\n'}
