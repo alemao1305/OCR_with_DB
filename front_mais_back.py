@@ -50,6 +50,7 @@ if __name__ == '__main__':
 
 #-----------------------------------------------------------------------------------------------------------
 
+#Trocar o caminho da pasta e baixar as bibliotecas necessarias 
 cars = cv.CascadeClassifier("C:/Users/olinto.mello/Desktop/ambiente_de_teste/cars.xml")
 
 if url1:
