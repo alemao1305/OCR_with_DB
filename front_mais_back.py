@@ -6,8 +6,13 @@ from color import *
 from vehicle import VehicleCounter
 import datetime 
 import sqlite3
+from diretorio_xml import caminho
+from diretorio_db import caminho2
 
 def gera_qr_code():
+    global url1
+    global caminho
+    global caminho2
     url = website_entry.get()
 
     if len(url) == 0:
@@ -27,7 +32,7 @@ def gera_qr_code():
             qr.make(fit=True)
             img = qr.make_image(fill_color='black', back_color='white')
             img.save('qrExport.png')
-
+            url1 =url
 
 if __name__ == '__main__':
     window = Tk()
@@ -48,16 +53,28 @@ if __name__ == '__main__':
     window.mainloop()
 
 #-----------------------------------------------------------------------------------------------------------
-    
-url1 = website_entry
 
-#capture = cv.VideoCapture(0)
-#capture = cv.VideoCapture('rtsp://admin:123456@10.3.0.122:554/play1.sdp', cv.CAP_FFMPEG)
-capture = cv.VideoCapture('url1',cv.CAP_FFMPEG)#('recursos/video.mp4')
-cars = cv.CascadeClassifier("Recursos/cars.xml")
-#moto = cv.CascadeClassifier("Recursos/moto.xml")
-#bikes = cv.CascadeClassifier("Recurso/bikes.xml")
-#Bus = cv.CascadeClassifier("Recurso/Bus_Front.xml")
+if caminho:
+
+    #cars = cv.CascadeClassifier("C:/Users/olinto.mello/Desktop/ambiente_de_teste/cars.xml")
+    cars = cv.CascadeClassifier(caminho)
+
+if url1:
+
+    #capture = cv.VideoCapture(0)
+    #capture = cv.VideoCapture('rtsp://admin:123456@10.3.0.122:554/play1.sdp', cv.CAP_FFMPEG)
+    capture = cv.VideoCapture(url1, cv.CAP_FFMPEG)
+    #capture = cv.VideoCapture('recursos/video.mp4')
+
+    #moto = cv.CascadeClassifier("Recursos/moto.xml")
+    #bikes = cv.CascadeClassifier("Recurso/bikes.xml")
+    #Bus = cv.CascadeClassifier("Recurso/Bus_Front.xml")
+
+    # Verificar se o classificador foi carregado corretamente
+if cars.empty():
+    print("Erro ao carregar o classificador em cascata!")
+else:
+    print("Classificador em cascata carregado com sucesso!")
 
 coordF   = [(170,448), (214,372), (480,372), (522,448)]
 coordROI = [(  0,500), (245,245), (460,245), (645,500)]
@@ -132,10 +149,28 @@ def region_of_interest(coord, image):
     return masked_image
 
 # ============================================================================
+# Função para lidar com a detecção de veículos
+'''def handle_vehicle_detection(detections, frame_number):
+    global car_counter  # Definir a variável car_counter como global
+
+    matches = []
+    if car_counter is None:
+        car_counter = VehicleCounter(frame.shape[:2], frame.shape[0] / 2)
+
+    for (i, (x, y, w, h)) in enumerate(detections):
+        centroid = get_centroid(x, y, w, h)
+        cv.rectangle(frame, (x,y), (x+w,y+h), GREEN, 2)
+        cv.circle(frame, centroid, 4, RED, -1)
+        matches.append(((x, y, w, h), centroid))
+        car_counter.update_count(matches, frame_number)
+
+    
+    draw_counter()'''
 
 # Loop principal
 data_incio = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-con = sqlite3.connect("recursos/Contador.db")
+#con = sqlite3.connect("C:/Users/olinto.mello/Desktop/ambiente_de_teste/Contador.db")
+con = sqlite3.connect(caminho2)
 cur = con.cursor()
 
 frame_number = -1
@@ -153,13 +188,14 @@ while True:
     croppedF   = region_of_interest(coordF, gray)
     croppedROI = region_of_interest(coordROI, gray)
 
-    # draw_polygon(coordF, GREEN)
+    #draw_polygon(coordF, GREEN)
     draw_polygon(coordROI, RED)
     cv.line(frame, (0, 300), (800, 300), RED, 1)
 
-    detections = cars.detectMultiScale(croppedROI, 1.1, 6)
+    #detections = cars.detectMultiScale(croppedROI, 1.1, 6)
 
     detections = cars.detectMultiScale(croppedROI, 1.1, 6)
+    #handle_vehicle_detection(detections, frame_number)
 
     matches = []
     if car_counter is None:
@@ -172,6 +208,7 @@ while True:
         matches.append(((x, y, w, h), centroid))
         car_counter.update_count(matches, frame)
 
+        draw_counter()
     # ... (código existente)
 
     #update_output_file(car_counter, frame_number,)  # Atualizar o arquivo de texto
